@@ -1,0 +1,36 @@
+<!-- <dx-data-grid [dataSource]="products" [showBorders]="true" [columnAutoWidth]="true">
+  <dxi-column dataField="productId" caption="Product ID"></dxi-column>
+  <dxi-column dataField="productQuantity" caption="Product Quantity"></dxi-column>
+
+</dx-data-grid> -->
+<h3>Product Details</h3>
+<!-- <div>{{products | json}}</div> -->
+<div *ngIf="products" class="table-responsive">
+  <dx-data-grid class="custom-data-grid"  [dataSource]="products" [showBorders]="true" [columnAutoWidth]="true">
+    <dxo-paging [pageSize]="4"></dxo-paging>
+    <dxo-search-panel [visible]="false"></dxo-search-panel>
+
+    <dxi-column dataField="productName" alignment="center" caption="Product Name"></dxi-column>
+
+    <dxi-column dataField="productDescription" caption="Product Description"></dxi-column>
+    <dxi-column dataField="productQuantity" alignment="center" caption="Quantity"></dxi-column>
+    <!-- <dxi-column dataField="productPrice" caption="Product Price"></dxi-column> -->
+
+    <dxi-column dataField="transporterName" alignment="center" caption="Transporter Name"></dxi-column>
+    <!-- <dxi-column dataField="scheduledDate" caption="Scheduled Date"></dxi-column> -->
+    <!-- <dxi-column dataField="scheduledDate" caption="Scheduled Date">
+      <dxo-template [ngIf]="data.data.scheduledDate">{{ data.data.scheduledDate | date:'shortDate' }}</dxo-template>
+    </dxi-column> -->
+    <dxi-column dataField="scheduledDate" alignment="center" caption="Scheduled Date" dataType="date">
+
+    </dxi-column>
+    <!-- <dxi-column *dxTemplate="let data of 'cellTemplate'" caption="Transporter Name">
+      <div *ngIf="data.data.status === 'Scheduled'">{{ data.data.transporterName }}</div>
+    </dxi-column> -->
+
+  </dx-data-grid>
+</div>
+<!-- <div *ngFor="let product of products">
+    <p>Product ID: {{ product.ProductCode }}</p>
+    <p>Product Quantity: {{ product.Quantity }}</p>
+</div> -->

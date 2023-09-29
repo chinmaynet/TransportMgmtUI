@@ -1,0 +1,254 @@
+import { Component, ViewChild, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ClientList } from 'src/app/client-list';
+import { Instruction, SubInstruction } from 'src/app/instruction';
+import { InstructionService } from 'src/app/instruction-services/instruction.service';
+import { StatusEnum } from 'src/app/status-enum';
+import { Product } from 'src/app/product';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DxButtonComponent } from 'devextreme-angular';
+import { ClientService } from 'src/app/instruction-services/client.service';
+import { ProductInstructionService } from 'src/app/instruction-services/product-instruction.service';
+import { ProductDropdown } from 'src/app/product-dropdown';
+import { Column } from 'devextreme/ui/tree_list';
+
+@Component({
+  selector: 'app-add-instruction',
+  templateUrl: './add-instruction.component.html',
+  styleUrls: ['./add-instruction.component.css']
+})
+export class AddInstructionComponent {
+
+  clientNames: ClientList[] = [];
+  selectedClientId: number | null = null;
+  message: string = 'Cannot add same product again';
+  productNames: ProductDropdown[] = [
+    // {
+    //   ProductId: 1,
+    //   ProductName: 'Product A',
+    //   ProductDescription: 'Description for Product A',
+    //   // ProductPrice: 10.99
+    // },
+    // {
+    //   ProductId: 2,
+    //   ProductName: 'Product B',
+    //   ProductDescription: 'Description for Product B',
+    //   // ProductPrice: 19.99
+    // },
+    // {
+    //   ProductId: 3,
+    //   ProductName: 'Product C',
+    //   ProductDescription: 'Description for Product C',
+    //   // ProductPrice: 15.49
+    // }
+  ];
+  selectedProductId!: number;
+  selectedProductName: string | null = null;
+  selectedProductDescription: string | null = null;
+  // selectedProductPrice: number |null = null;
+  showError: boolean = false;
+
+  @ViewChild('submitButton') submitButton!: DxButtonComponent;
+
+  subInstruction: SubInstruction = {
+    InstructionId: 0,
+    InstructionDate: new Date(),
+    ClientName: '',
+    PickupAddress: '',
+    DeliveryAddress: '',
+    ClientId: 0,
+    ClientList: new ClientList(0, ''),
+    ProductList: [],
+    // ProductList: {
+    //   ProductCode: 0,
+    //   ProductDescription: '',
+    //   Quantity: 0
+    // }
+  }
+  addInstructionRequest: Instruction = {
+    Instruction: this.subInstruction,
+    BillingId: 0,
+    TotalQuantity: 0,
+    TotalProducts:0,
+    TotalPrice:0,
+    Status: StatusEnum.Pending,
+    ProductCode: 0,
+    ProductDescription: '',
+    // ProductPrice:0,
+  };
+
+  products: Product[] = [];
+  constructor(
+    private clientService: ClientService,
+    private instructionService: InstructionService,
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private productInstructionService: ProductInstructionService
+  ) {
+    // this.addInstructionRequest.Instruction.ClientList.name = this.addInstructionRequest.Instruction.ClientName;//old
+    this.subInstruction.ClientList.name = this.addInstructionRequest.Instruction.ClientName;
+  }
+  ngOnInit(): void {
+    this.loadClientNames();
+    this.loadProductNames();
+    this.setCellValue = this.setCellValue.bind(this);
+  }
+  loadClientNames() {
+    // Fetch client names from your client service
+    this.clientService.getClientNames().subscribe((clients) => {
+      this.clientNames = clients;
+      console.log(this.clientNames);
+    });
+  }
+  loadProductNames() {
+    // Fetch product names from your product service
+    //get products list from api
+
+    this.productInstructionService.getProducts().subscribe((products) => {
+      this.productNames = products;
+      console.log('Product Names:', this.productNames);
+    });
+  }
+
+  onProductSelectionChange() {
+    // console.log('Selected Product ID:', this.selectedProductId);
+    // console.log('Product Names:', this.productNames);
+
+    // Find the selected product in the productNames array
+    const selectedProduct = this.productNames.find(
+      (product) => product.productId === Number(this.selectedProductId)
+    );
+
+    // console.log('Selected Product:', selectedProduct);
+
+    if (selectedProduct) {
+      // Update the selected product description
+      this.selectedProductDescription = selectedProduct.productDescription;
+
+      // this.selectedProductPrice=selectedProduct.productPrice;
+
+      this.addInstructionRequest.ProductCode = selectedProduct.productId;
+
+      this.addInstructionRequest.ProductDescription = this.selectedProductDescription;
+      // this.addInstructionRequest.ProductPrice = this.selectedProductPrice;
+    } else {
+      // Handle the case where no product was found (optional)
+      console.log('No product found for the selected ID.');
+    }
+    // console.log('addInstructionRequest:', this.addInstructionRequest.ProductDescription);
+  }
+
+  addInstruction() {
+    if (this.isSubmitButtonEnabled()) {
+      const productListForApi = this.products.map((product) => ({
+        instructionProductId: 0, // This generated by the server
+        productId: product.ProductId, // required
+        quantity: product.Quantity,
+        instructionId: 0, // This generated by the server
+        productDescription: product.ProductDescription,
+      }));
+
+      const apiRequest = {
+        id: 0, // This generated by the server
+        createdDate: this.addInstructionRequest.Instruction.InstructionDate, //
+        clientsId: this.selectedClientId, // required
+        pickupAddress: this.addInstructionRequest.Instruction.PickupAddress,// required
+        deliveryAddress: this.addInstructionRequest.Instruction.DeliveryAddress,// required
+        status: this.addInstructionRequest.Status,
+        productList: productListForApi,// required
+      };
+
+      // Make the POST request with the mapped API request object
+      this.instructionService.addInstruction(apiRequest).subscribe({
+        next: (response) => {
+          this.router.navigate(['/createInstruction']);
+          alert('Instruction Added Successfully');
+        },
+        error: (error) => {
+          console.error('Error:', error);
+          alert('Error adding instruction. Please check the data and try again.');
+        }
+      });
+    }
+  }
+  clearForm() {
+    this.addInstructionRequest = {
+      Instruction: {
+        InstructionId: 0,
+        InstructionDate: new Date(),
+        ClientName: '',
+        PickupAddress: '',
+        DeliveryAddress: '',
+        ClientId: 0,
+        ClientList: {
+          id: 0,
+          name: ""
+        },
+        ProductList: [],
+      },
+      BillingId: 0,
+      TotalQuantity: 0,
+      TotalProducts:0,
+      TotalPrice:0,
+      Status: StatusEnum.Pending,
+      ProductCode: 0,
+      ProductDescription: '',
+      // ProductPrice:0,
+    };
+    this.selectedClientId = null; 
+    this.products = [];
+  }
+
+  isSubmitButtonEnabled() {
+    const instructionFilled =
+      !!this.addInstructionRequest.Instruction.InstructionDate &&
+      !!this.selectedClientId &&
+      !!this.addInstructionRequest.Instruction.PickupAddress &&
+      !!this.addInstructionRequest.Instruction.DeliveryAddress;
+    const atLeastOneProductAdded = this.products.length > 0;
+    if (!instructionFilled || !atLeastOneProductAdded) {      
+      this.message = 'Please fill required details to save the intruction';
+      this.showError = true;
+      return false;
+    }
+    else
+      this.message = 'Instruction added Successfully';
+      return true;
+  }
+
+  onRowInserted(): boolean {
+    let checkDuplicate = this.products.reduce((acc: any, curr: any) => { acc[curr.ProductId] = (acc[curr.ProductId] || 0) + 1; return acc; }, {});
+    if (Object.values(checkDuplicate).find((x: any) => x > 1)) {
+      return false;
+    }
+    return true;
+    // this.productNames = this.productNames.filter((x: any) => x.productId != value);
+  }
+
+  setCellValue(this: Column, newData: any, value: number, currentRowData: any) {
+    if ((<any>this)['products'].find((x: any) => x.ProductId == value)) {
+      (<any>this).message = 'Cannot add same product again';
+      (<any>this).showError = true;
+      return;
+    }
+    (<any>this).showError = false;
+    newData.ProductDescription = (<any>this)['productNames'].find((x: any) => x.productId == value).productDescription;
+    newData.ProductPrice = (<any>this)['productNames'].find((x: any) => x.productId == value).productPrice;
+    newData.ProductId = value;
+  }
+
+  setQtyCellValue(this: Column, newData: any, value: number, currentRowData: any) {
+    newData.ProductDescription = currentRowData.ProductDescription;
+    newData.ProductId = currentRowData.ProductId;
+    newData.Quantity = value;
+  }
+
+  functionCache: any = {};
+  validateRange() {
+    if (!this.functionCache[`min${1}`])
+      this.functionCache[`min${1}`] = (options: any) => {
+        return options.value >= 1;
+      }
+    return this.functionCache[`min${1}`]
+  }
+}

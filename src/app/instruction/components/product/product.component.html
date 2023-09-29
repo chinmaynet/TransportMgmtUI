@@ -1,0 +1,12 @@
+<dx-data-grid id="gridContainer" [dataSource]="products" keyExpr="ID" [allowColumnReordering]="true"
+  [showBorders]="true">
+  <dxo-paging [enabled]="true"></dxo-paging>
+  <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true">
+  </dxo-editing>
+  <dxi-column dataField="ProductId" caption="ProductName" [width]="125" [setCellValue]="setCellValue">
+    <dxo-lookup [dataSource]="productNames" displayExpr="productName" valueExpr="productId">
+    </dxo-lookup>
+  </dxi-column>
+  <dxi-column dataField="ProductDescription" caption="Product Description" [allowEditing]="false"></dxi-column>
+  <dxi-column dataField="Quantity" dataType="number"></dxi-column>
+</dx-data-grid>
