@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'; 
 import { Observable } from 'rxjs';
-import { Instruction } from '../instruction';
-import { StatusEnum } from '../status-enum';
-import { ProductDropdown } from '../product-dropdown';
-import { Product } from '../product';
+import { Instruction } from '../../models/instruction';
+import { StatusEnum } from '../../status-enum';
+import { ProductDropdown } from '../../models/product-dropdown';
+import { Product } from '../../models/product';
 import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'

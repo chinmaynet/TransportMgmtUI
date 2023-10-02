@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Instruction } from '../../../instruction';
-import { InstructionService } from 'src/app/instruction-services/instruction.service';
+import { Instruction } from '../../../models/instruction';
+import { InstructionService } from 'src/app/instruction/instruction-services/instruction.service';
 import { Router } from '@angular/router';
 import { faExpand, faEye , faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { StatusEnum } from 'src/app/status-enum';

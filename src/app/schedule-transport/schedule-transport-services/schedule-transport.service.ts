@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { StatusEnum } from '../status-enum';
+import { StatusEnum } from '../../status-enum';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http'; 
-import { Instruction } from '../instruction';
-import { Product } from '../product';
+import { Instruction } from '../../models/instruction';
+import { Product } from '../../models/product';
 @Injectable({
   providedIn: 'root'
 })

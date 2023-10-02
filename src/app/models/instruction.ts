@@ -1,6 +1,6 @@
 import { ClientList } from "./client-list";
 import { Product } from "./product";
-import { StatusEnum } from "./status-enum";
+import { StatusEnum } from "../status-enum";
 export interface Instruction {
     Instruction: SubInstruction,
     BillingId: number;

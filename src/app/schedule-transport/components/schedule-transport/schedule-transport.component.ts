@@ -2,9 +2,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { StatusEnum } from 'src/app/status-enum';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
-import { InstructionService } from 'src/app/instruction-services/instruction.service';
-import { Instruction } from 'src/app/instruction';
-import { Product } from 'src/app/product';
+import { InstructionService } from 'src/app/instruction/instruction-services/instruction.service';
+import { Instruction } from 'src/app/models/instruction';
+import { Product } from 'src/app/models/product';
 @Component({
   selector: 'app-schedule-transport',
   templateUrl: './schedule-transport.component.html',

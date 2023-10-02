@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Instruction } from 'src/app/instruction';
-import { Product } from 'src/app/product';
+import { Instruction } from 'src/app/models/instruction';
+import { Product } from 'src/app/models/product';
 import { StatusEnum } from 'src/app/status-enum';
 @Component({
   selector: 'app-product-grid',
@@ -13,6 +13,5 @@ export class ProductGridComponent implements OnInit {
   @Output() productsChange = new EventEmitter<any>(); 
  
   ngOnInit(): void {
-    console.log(this.products);
   }
 }

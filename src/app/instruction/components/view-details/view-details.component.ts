@@ -1,10 +1,10 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Instruction } from 'src/app/instruction';
-import { InstructionService } from 'src/app/instruction-services/instruction.service';
+import { Instruction } from 'src/app/models/instruction';
+import { InstructionService } from 'src/app/instruction/instruction-services/instruction.service';
 import { StatusEnum } from 'src/app/status-enum';
 import { Router } from '@angular/router';
-import { Product } from 'src/app/product';
+import { Product } from 'src/app/models/product';
 @Component({
   selector: 'app-view-details',
   templateUrl: './view-details.component.html',

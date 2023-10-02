@@ -1,15 +1,15 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ClientList } from 'src/app/client-list';
-import { Instruction, SubInstruction } from 'src/app/instruction';
-import { InstructionService } from 'src/app/instruction-services/instruction.service';
+import { ClientList } from 'src/app/models/client-list';
+import { Instruction, SubInstruction } from 'src/app/models/instruction';
+import { InstructionService } from 'src/app/instruction/instruction-services/instruction.service';
 import { StatusEnum } from 'src/app/status-enum';
-import { Product } from 'src/app/product';
+import { Product } from 'src/app/models/product';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DxButtonComponent } from 'devextreme-angular';
-import { ClientService } from 'src/app/instruction-services/client.service';
-import { ProductInstructionService } from 'src/app/instruction-services/product-instruction.service';
-import { ProductDropdown } from 'src/app/product-dropdown';
+import { ClientService } from 'src/app/instruction/instruction-services/client.service';
+import { ProductInstructionService } from 'src/app/instruction/instruction-services/product-instruction.service';
+import { ProductDropdown } from 'src/app/models/product-dropdown';
 import { Column } from 'devextreme/ui/tree_list';
 
 @Component({
@@ -97,7 +97,15 @@ export class AddInstructionComponent {
       this.addInstructionRequest.ProductDescription = this.selectedProductDescription;
     }
   }
-
+  showToast(type: string, message: string) {
+    this.toastType = type;
+    this.toastMessage = message;
+    this.toastVisible = true;
+    
+    setTimeout(() => {
+      this.toastVisible = false;
+    }, this.toastDisplayTime);
+  }
   addInstruction() {
     if (this.isSubmitButtonEnabled()) {
       const productListForApi = this.products.map((product) => ({
@@ -119,9 +127,9 @@ export class AddInstructionComponent {
       };
       this.instructionService.addInstruction(apiRequest).subscribe({
         next: (response) => {
-          this.router.navigate(['/createInstruction']);
-          alert('Instruction Added Successfully');
           this.showToast('success', 'Instruction Added Successfully');
+          alert('Instruction Added Successfully');
+          this.router.navigate(['/createInstruction']);
         },
         error: (error) => {
           console.error('Error:', error);
@@ -132,14 +140,7 @@ export class AddInstructionComponent {
     }
   }
 
-  showToast(type: string, message: string) {
-    this.toastType = type;
-    this.toastMessage = message;
-    this.toastVisible = true;
-    setTimeout(() => {
-      this.toastVisible = false;
-    }, this.toastDisplayTime);
-  }
+
   clearForm() {
     this.addInstructionRequest = {
       Instruction: {
@@ -179,8 +180,9 @@ export class AddInstructionComponent {
       this.showError = true;
       return false;
     }
-    else
+    else{
       this.message = 'Instruction added Successfully';
+    } 
     return true;
   }
 
