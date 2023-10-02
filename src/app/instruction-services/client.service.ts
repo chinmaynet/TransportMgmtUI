@@ -7,17 +7,11 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ClientService {
-  // private basePath = 'https://localhost:44326'; 
   private basePath = 'https://localhost:44382'; 
   constructor(private http : HttpClient) { }
-
-  // getClientNames(): Observable<ClientList[]>{
-  //   return this.http.get<ClientList[]>(this.basePath + '/api/clients');
-  // }
   getClientNames(): Observable<ClientList[]> {
     return this.http.get<any>(this.basePath + '/api/clients').pipe(
       map((response: any) => {
-        // Assuming the response has a 'data' field containing the client data
         return response.data.map((item: any) => ({
           id: item.id,
           name: item.name

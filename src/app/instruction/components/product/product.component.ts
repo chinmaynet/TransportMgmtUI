@@ -17,14 +17,10 @@ export class ProductComponent implements OnInit {
   events: Array<string> = [];
 
   constructor() {
-    console.log(this.products);
-    console.log(this.productNames);
     this.setCellValue = this.setCellValue.bind(this);
   }
 
   ngOnInit(): void {
-    console.log(this.products);
-    console.log(this.productNames);
   }
   
   setCellValue(this: Column, newData: any, value: number, currentRowData: any) {

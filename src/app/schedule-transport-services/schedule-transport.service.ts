@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StatusEnum } from '../status-enum';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http'; //imported
+import { HttpClient } from '@angular/common/http'; 
 import { Instruction } from '../instruction';
 import { Product } from '../product';
 @Injectable({
@@ -24,8 +24,7 @@ export class ScheduleTransportService {
       case 4:
         return StatusEnum.Invoiced;
       default:
-        // Handle unknown status values if needed
-        return StatusEnum.Pending; // Or another default value
+        return StatusEnum.Pending;
     }
   }
   getAllPendingInstruction(): Observable<Instruction[]> {
@@ -35,8 +34,8 @@ export class ScheduleTransportService {
     return apiResponse.map((item: any) => ({
       Instruction: {
         InstructionId: item.id,
-        // InstructionDate: new Date(item.createdDate),
-        ScheduledDate: new Date(item.scheduledDate),          ////schedule transporter
+      
+        ScheduledDate: new Date(item.scheduledDate),          
         ClientName: item.clientName,
         PickupAddress: item.pickupAddress,
         DeliveryAddress: item.deliveryAddress,
@@ -48,8 +47,7 @@ export class ScheduleTransportService {
       TotalQuantity: 0,
       Status:  this.mapStatusFromApi(item.status),
       ProductCode: 0,
-      ProductDescription: '', //because we are not getting ProductDescription from api
+      ProductDescription: '',
     }));
   }
-  
 }

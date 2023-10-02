@@ -11,7 +11,6 @@ import { Product } from 'src/app/product';
   styleUrls: ['./view-details.component.css']
 })
 export class ViewDetailsComponent implements OnInit, OnChanges {
-  // instruction : Instruction | null= null;
   instruction: any;
   instructionClientName: string = "";
   instructionId?: number;
@@ -37,9 +36,8 @@ export class ViewDetailsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    // Retrieve the instruction ID from the route parameter
     this.route.params.subscribe(params => {
-      this.instructionId = params['id']; // Assuming 'id' is the route parameter name      
+      this.instructionId = params['id'];
       console.log(this.instructionId);
 
       this.getInstructionById();
@@ -74,18 +72,12 @@ export class ViewDetailsComponent implements OnInit, OnChanges {
     { text: 'Invoiced', value: 4 }
   ];
   onRowUpdated(event: any) {
-    const updatedRowData = event.data; // The updated row data
+    const updatedRowData = event.data; 
     this.submitDataToBackend(updatedRowData);
   }
   submitDataToBackend(updatedRowData: any) {
-    // Prepare the data to be sent to the backend for the updated row
-    // const dataToSubmit = {
-    //   instructionProductId: updatedRowData.instructionProductId,
-    //   transporterId: updatedRowData.Transporter.TransporterId,
-    //   scheduledDate: updatedRowData.ScheduledDate
-    // };
     const dataToSubmit = {
-      instructionId: this.instructionId, // Provide the correct instructionId
+      instructionId: this.instructionId, 
       transporterProducts: this.savedTransporterProducts.map((selectedProduct) => ({
         instructionProductId: selectedProduct.instructionProductId,
         scheduledDate: selectedProduct.ScheduledDate.toISOString(),
@@ -93,33 +85,20 @@ export class ViewDetailsComponent implements OnInit, OnChanges {
       })),
     };
     console.log("Data", dataToSubmit);
-    // Assuming you have a service method to send data to the backend
-    // this.instructionService.addTransportInstruciton(dataToSubmit).subscribe(
-    //   (response) => {
-    //     // Handle a successful response from the backend
-    //     console.log('Data saved successfully:', response);
-    //   },
-    //   (error) => {
-    //     // Handle any errors from the backend
-    //     console.error('Error saving data:', error);
-    //   }
-    // );
-    // dataToSubmit.instructionProductId, 
     this.instructionService.addTransportInstruciton(dataToSubmit).subscribe(
       (response) => {
-        // Handle a successful response from the backend
         console.log('Data saved successfully:', response);
-        // updatedRowData.isVisible = false;
+
       },
       (error) => {
-        // Handle any errors from the backend
+
         console.error('Error saving data:', error);
       }
     );
 
   }
   calculateTotalQuantity() {
-    // Initialize total quantity to 0
+
     this.totalQuantity = 0;
     this.totalPrice = 0;
 
@@ -127,12 +106,12 @@ export class ViewDetailsComponent implements OnInit, OnChanges {
     console.log("something should be printed on conlsole ", this.instruction?.Instruction.ProductList);
 
     this.instruction.Instruction.ProductList.forEach((product: any) => {
-      // Log the product quantity
+
       console.log(product.productQuantity);
 
-      // Calculate the product price for the current product
-      const productPrice = product.productPrice || 0; // Use 0 if product price is undefined
-      const productQuantity = product.productQuantity || 0; // Use 0 if product quantity is undefined
+
+      const productPrice = product.productPrice || 0; 
+      const productQuantity = product.productQuantity || 0; 
 
       this.totalPrice += productPrice * productQuantity;
       this.totalQuantity += product.productQuantity;      
@@ -145,12 +124,7 @@ export class ViewDetailsComponent implements OnInit, OnChanges {
     this.instruction.Instruction.TotalProducts = this.totalProducts;
     this.instruction.Instruction.TotalPrice = this.totalPrice;
     this.instruction.Instruction.Status = this.statusOptions.find(x => x.value == this.instruction.Status)?.text;
-    // this.gridData = [
-    //   {
-    //     // TotalQuantity: this.totalQuantity,
-    //     TotalProducts: this.totalProducts,
-    //   }
-    // ];
+ 
     console.log("total no of products again", this.gridData[0].TotalProducts)
   }
   updateInstruction() {
@@ -158,7 +132,7 @@ export class ViewDetailsComponent implements OnInit, OnChanges {
       (updatedInstructions) => {
 
         console.log('Updated instructions:', updatedInstructions);
-        // this.router.navigate(['/view-details',this.instructionId]);
+   
         this.ngOnInit();
         this.router.navigate([], { relativeTo: this.route });
 

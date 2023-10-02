@@ -37,14 +37,6 @@ export class LoginComponent {
   login() {
     this.matchingUser = this.loginUsers.find(u => u.Email === this.user.email && u.Password === this.user.password);
     this.sharedService.setSharedVariable(this.matchingUser);
-    // if (this.matchingUser) {
-    //   // User is authenticated, perform the desired action (e.g., navigate to another page)
-    //   console.log('User authenticated:', this.matchingUser);
     this.router.navigate(['welcome']);
-    // } else {
-    //   // Authentication failed, handle the error (e.g., display an error message)
-    //   window.alert('Authentication failed');
-    //   console.log('Authentication failed');
-    // }
   }
 }

@@ -12,7 +12,7 @@ import { SharedService } from '../shared.service';
     CommonModule,
     FormsModule
   ],
-  providers: [SharedService], // Add the service to providers
+  providers: [SharedService],
   exports:[
     LoginComponent
   ]

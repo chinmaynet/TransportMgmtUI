@@ -8,18 +8,15 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ProductInstructionService {
-  // private apiUrl = 'https://localhost:44326';
+
   private apiUrl = 'https://localhost:44382';
 
   constructor(private http: HttpClient) { }
-  
-  // getProducts(): Observable<ProductDropdown[]> {    //for dropdown only not for display
-  //   return this.http.get<ProductDropdown[]>(`${this.apiUrl}/api/products`);
-  // }
+
   getProducts(): Observable<ProductDropdown[]> {
     return this.http.get<any>(`${this.apiUrl}/api/products`).pipe(
       map((response: any) => {
-        // Assuming the response has a 'data' field containing the product data
+ 
         return response.data.map((item: any) => ({
           productId: item.productId,
           productName: item.productName,

@@ -1,7 +1,6 @@
 .tm-welcome{
     background-image: url('../../assets/tm-wel.jpg') ;
     height: 590px;
-    /* width: 890px; */
     background-size: 100% 100%;
 }
 .card {

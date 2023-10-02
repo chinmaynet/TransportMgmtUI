@@ -1,4 +1,4 @@
-export interface Product { //for product component
+export interface Product {
     ProductId:number;
     ProductDescription:string;
     Quantity:number;    
