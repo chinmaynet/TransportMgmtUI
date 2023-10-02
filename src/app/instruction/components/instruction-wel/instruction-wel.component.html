@@ -20,26 +20,6 @@
                             <dxo-sorting [mode]="'single'"></dxo-sorting>
                             <dxo-search-panel [visible]="true"></dxo-search-panel>
 
-                            <!-- <dxi-column caption="Serial Number">
-                    
-                                <ng-template dxTemplate="serialNumberColumn" let-rowIndex="rowIndex">
-                                    <div>{{ serialNumbers[rowIndex] }}</div>
-                                  </ng-template>
-                            </dxi-column> -->
-
-                            
-
-                            <!-- for API data  -->
-                            <!-- <dxi-column dataField="createdDate" caption="Instruction Date"></dxi-column>
-                            <dxi-column dataField="clientName" caption="ClientName"></dxi-column>
-                            <dxi-column dataField="id" caption="Instruction Id"></dxi-column>
-                            <dxi-column dataField="status" caption="Status"></dxi-column> -->
-
-                            <!-- <dxi-column dataField="instructionDate" caption="Instruction Date"></dxi-column>
-                            <dxi-column dataField="clientName" caption="ClientName"></dxi-column>
-                            <dxi-column dataField="instructionId" caption="Instruction Id"></dxi-column>
-                            <dxi-column dataField="status" caption="Status"></dxi-column> -->
-
                             <dxi-column dataField="Instruction.InstructionId" dataType="number" alignment="center"
                                 caption="Instruction Id"></dxi-column>
                             <dxi-column dataField="Instruction.InstructionDate" dataType="date" alignment="center"
@@ -53,13 +33,6 @@
                                 <dxo-lookup [dataSource]="statusOptions" displayExpr="text"
                                     valueExpr="value"></dxo-lookup>
                             </dxi-column>
-
-                            <!-- //for hard coded data -->
-                            <!-- <dxi-column dataField="Instruction.InstructionDate" caption="Instruction Date"></dxi-column>
-                            <dxi-column dataField="Instruction.ClientName" caption="ClientName"></dxi-column>
-                            <dxi-column dataField="Instruction.InstructionId" caption="Instruction Id"></dxi-column>
-                            <dxi-column dataField="Status" caption="Status"></dxi-column> -->
-
                             <!-- <dxi-column dataField="Icon" caption="Edit" [cellTemplate]="cellTemplate"> -->
                             <dxi-column dataField="Icon" caption="Add Transporter" dataType="boolean"
                                 cellTemplate="cellTemplate" >

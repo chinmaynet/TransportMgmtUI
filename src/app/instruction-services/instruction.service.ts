@@ -6,6 +6,7 @@ import { Testmodel } from '../testmodel';
 import { StatusEnum } from '../status-enum';
 import { ProductDropdown } from '../product-dropdown';
 import { Product } from '../product';
+import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
@@ -53,10 +54,25 @@ export class InstructionService {
   // getAllInstruction() : Observable<Testmodel[]>{
   //   return this.http.get<Testmodel[]>(this.basePath + '/api/instructions');
   // }
-  getAllTransporters():Observable<any>{
-    return this.http.get<any[]>(this.basePath + '/api/TransporterList');
+  // getAllTransporters():Observable<any>{
+  //   return this.http.get<any[]>(this.basePath + '/api/TransporterList');
+  // }
+  getAllTransporters(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.basePath}/api/TransporterList`).pipe(
+      map((apiResponse: any) => {
+        if (apiResponse && apiResponse.data && Array.isArray(apiResponse.data)) {
+          return apiResponse.data.map((item: any) => ({
+            id: item.id,
+            name: item.name,
+          }));
+        } else {
+          // Handle the case where the response does not match the expected structure
+          return [];
+        }
+      })
+    );
   }
-
+  
   getInstructionById(id: number): Observable<Instruction> {
     const url = `${this.basePath}/api/instructions/${id}`;
     return this.http.get<Instruction>(url);
@@ -74,11 +90,17 @@ export class InstructionService {
   // addTransportInstruciton(apiRequest: any){
   //   return this.http.post<any>(this.basePath + '/api/Transporter', apiRequest);
   // }
-  addTransportInstruciton(instructionProductId: number, data: any): Observable<any> {
-    const apiUrl = `${this.basePath}/api/instructionproducts/${instructionProductId}/addTransporter`;
+  // addTransportInstruciton(instructionProductId: number, data: any): Observable<any> {
+  //   const apiUrl = `${this.basePath}/api/instructionproducts/${instructionProductId}/addTransporter`;
+  //   return this.http.post(apiUrl, data);
+  // }
+  
+  addTransportInstruciton(data: any): Observable<any> {
+    const apiUrl = `${this.basePath}/api/instructionproducts/addTransporter`;
+
     return this.http.post(apiUrl, data);
   }
-
+  
   //status update 
   getAllUpdateInstructionChangeStatus(): Observable<any[]> {
     return this.http.get<any[]>(this.basePath + '/api/transporterscheduled');
@@ -103,7 +125,7 @@ export class InstructionService {
   // }
 
   transformGetAllApiResponse(apiResponse: any): Instruction[] {
-    return apiResponse.map((item: any) => ({
+    return apiResponse.data.map((item: any) => ({
       Instruction: {
         InstructionId: item.id,
         InstructionDate: new Date(item.createdDate),
@@ -122,29 +144,95 @@ export class InstructionService {
     }));
   }
 
+  // transformGetInstructionByIdApiResponse(apiResponse: any): Instruction {
+  //   return apiResponse.data.map((item: any) => ({
+  //     Instruction: {
+  //       InstructionId: apiResponse.id,
+  //       InstructionDate: new Date(apiResponse.createdDate),
+  //       ClientName: apiResponse.clientName,
+  //       PickupAddress: apiResponse.pickupAddress,
+  //       DeliveryAddress: apiResponse.deliveryAddress,
+  //       ClientId: 0, // You may need to set this value based on your requirements
+  //       ClientList: {
+  //         id : 0,               
+  //         name :apiResponse.clientName
+  //       }, // You may need to set this value based on your requirements
+  //       ProductList: apiResponse.productList
+  //     },
+  //     BillingId: apiResponse.billingId, //  not sure
+  //     TotalQuantity: apiResponse.totalQuantity, //
+  //     TotalProducts:0,
+  //     TotalPrice:0,
+  //     Status: this.mapStatusFromApi(apiResponse.status),
+  //     ProductCode: apiResponse.productCode, //
+  //     ProductDescription: apiResponse.productDescription, // 
+  //     // ProductPrice:apiResponse.productPrice, //////////changed
+  //   }));
+  // }
   transformGetInstructionByIdApiResponse(apiResponse: any): Instruction {
+    const data = apiResponse.data;
+  
+   
+    const productItems = data.productList.map((productItem: any) => ({
+ 
+      instructionProductId: productItem.instructionProductId,
+      productName: productItem.productName,
+      productQuantity: productItem.productQuantity,
+      productDescription: productItem.productDescription,
+      productPrice: productItem.productPrice,
+      instructionId: data.id,
+      scheduledDate: productItem.scheduledDate,
+      transporterName: productItem.transporterName,
+    }));
+  
     return {
       Instruction: {
-        InstructionId: apiResponse.id,
-        InstructionDate: new Date(apiResponse.createdDate),
-        ClientName: apiResponse.clientName,
-        PickupAddress: apiResponse.pickupAddress,
-        DeliveryAddress: apiResponse.deliveryAddress,
-        ClientId: 0, // You may need to set this value based on your requirements
+        InstructionId: data.id,
+        InstructionDate: new Date(data.createdDate),
+        ClientName: data.clientName,
+        PickupAddress: data.pickupAddress,
+        DeliveryAddress: data.deliveryAddress,
+        ClientId: 0, 
         ClientList: {
-          id : 0,               
-          name :apiResponse.clientName
-        }, // You may need to set this value based on your requirements
-        ProductList: apiResponse.productList
+          id: 0,
+          name: data.clientName,
+        }, 
+        ProductList: productItems, 
       },
-      BillingId: apiResponse.billingId, //  not sure
-      TotalQuantity: apiResponse.totalQuantity, //
-      TotalProducts:0,
-      TotalPrice:0,
-      Status: this.mapStatusFromApi(apiResponse.status),
-      ProductCode: apiResponse.productCode, //
-      ProductDescription: apiResponse.productDescription, // 
-      // ProductPrice:apiResponse.productPrice, //////////changed
+      BillingId: data.billingId, 
+      TotalQuantity: data.totalQuantity,
+      TotalProducts: 0,
+      TotalPrice: 0, 
+      Status: this.mapStatusFromApi(data.status),
+      ProductCode: data.productCode, 
+      ProductDescription: data.productDescription,
+      // ProductPrice: data.productPrice, 
     };
   }
+  
+  // transformGetInstructionByIdApiResponse(apiResponse: any): Instruction {
+  //   return {
+  //     Instruction: {
+  //       InstructionId: apiResponse.id,
+  //       InstructionDate: new Date(apiResponse.createdDate),
+  //       ClientName: apiResponse.clientName,
+  //       PickupAddress: apiResponse.pickupAddress,
+  //       DeliveryAddress: apiResponse.deliveryAddress,
+  //       ClientId: 0, 
+  //       ClientList: {
+  //         id: 0, 
+  //         name: apiResponse.clientName
+  //       },
+  //       ProductList: apiResponse.productList || [], 
+  //     },
+  //     BillingId: apiResponse.billingId || 0, 
+  //     TotalQuantity: apiResponse.totalQuantity || 0,
+  //     TotalProducts: 0, 
+  //     TotalPrice: 0, 
+  //     Status: this.mapStatusFromApi(apiResponse.status),
+  //     ProductCode: apiResponse.productCode || 0,
+  //     ProductDescription: apiResponse.productDescription || '',
+  //     // ProductPrice: apiResponse.productPrice || 0,
+  //   };
+  // }
 }

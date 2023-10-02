@@ -23,7 +23,7 @@ export class ViewDetailsComponent implements OnInit, OnChanges {
   gridData: { TotalProducts: number }[] = [{ TotalProducts: 0 }];
   transporters: { id: number, name: string }[] = [];
   toscheduleProducts: any;
-
+  savedTransporterProducts: any[] = [];
   constructor(private route: ActivatedRoute,
     private instructionService: InstructionService, private router: Router,) {
   }
@@ -79,10 +79,18 @@ export class ViewDetailsComponent implements OnInit, OnChanges {
   }
   submitDataToBackend(updatedRowData: any) {
     // Prepare the data to be sent to the backend for the updated row
+    // const dataToSubmit = {
+    //   instructionProductId: updatedRowData.instructionProductId,
+    //   transporterId: updatedRowData.Transporter.TransporterId,
+    //   scheduledDate: updatedRowData.ScheduledDate
+    // };
     const dataToSubmit = {
-      instructionProductId: updatedRowData.instructionProductId,
-      transporterId: updatedRowData.Transporter.TransporterId,
-      scheduledDate: updatedRowData.ScheduledDate
+      instructionId: this.instructionId, // Provide the correct instructionId
+      transporterProducts: this.savedTransporterProducts.map((selectedProduct) => ({
+        instructionProductId: selectedProduct.instructionProductId,
+        scheduledDate: selectedProduct.ScheduledDate.toISOString(),
+        transporterId: selectedProduct.transporterId,
+      })),
     };
     console.log("Data", dataToSubmit);
     // Assuming you have a service method to send data to the backend
@@ -96,7 +104,8 @@ export class ViewDetailsComponent implements OnInit, OnChanges {
     //     console.error('Error saving data:', error);
     //   }
     // );
-    this.instructionService.addTransportInstruciton(dataToSubmit.instructionProductId, dataToSubmit).subscribe(
+    // dataToSubmit.instructionProductId, 
+    this.instructionService.addTransportInstruciton(dataToSubmit).subscribe(
       (response) => {
         // Handle a successful response from the backend
         console.log('Data saved successfully:', response);

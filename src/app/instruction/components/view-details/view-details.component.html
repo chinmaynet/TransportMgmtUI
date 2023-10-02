@@ -38,10 +38,9 @@
         <div class="col-1">
             <br><br><br>
         </div>
-
         <div class="col-10" *ngIf="instruction">
             <!-- {{instruction.Instruction.ProductList | json}} -->
-            <app-product-grid [(products)]="instruction.Instruction.ProductList"></app-product-grid>
+            <app-product-grid [(products)]="instruction.Instruction.ProductList" (productsChange)="productsChange()"></app-product-grid>
         </div>
         <div class="col-1">
         </div>
@@ -53,7 +52,7 @@
         </div>
 
         <div class="col-10" >
-            <app-schedule-transport *ngIf="instruction" [instruction]="instruction" [(products)]="toscheduleProducts"
+            <app-schedule-transport *ngIf="instruction" [instruction]="instruction" [savedTransporterProducts]="savedTransporterProducts" [(products)]="toscheduleProducts"
                 (productsChange)="productsChange()">
             </app-schedule-transport>
         </div>

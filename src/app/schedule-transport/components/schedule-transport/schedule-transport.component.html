@@ -20,17 +20,18 @@
 
     <dxi-column dataField="ScheduledDate" alignment="center" caption="Scheduled Date" dataType="date"
         [editorOptions]="{ type: 'date', defaultDate: initialScheduledDate, value: dateBoxValue }">
-        <dxi-validation-rule type="required" message="Scheduled Date is required"></dxi-validation-rule>
-
+        <!-- <dxi-validation-rule type="required" message="Scheduled Date is required"></dxi-validation-rule> -->
     </dxi-column>
 </dx-data-grid>
 <div class="row mt-2">
-    <div class="col-4"></div>
+    <div class="col-4">
+
+    </div>
     <div class="col-1">
-        <button class="btn btn-sm btn-primary mx-5" (click)="updateInstruction()">Update</button>
+        <button class="btn btn-sm btn-primary" (click)="updateInstruction()">Update</button>
     </div>
     <div class="col-4">
-        <button class="btn btn-sm btn-secondary mx-5" (click)="backToInstruction()">Back To Instruction</button>
+        <button class="btn btn-sm btn-secondary" (click)="backToInstruction()">Back To Instruction</button>
     </div>
     <div class="col-3"></div>
 </div>

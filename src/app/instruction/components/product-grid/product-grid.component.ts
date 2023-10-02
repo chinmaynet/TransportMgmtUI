@@ -9,11 +9,9 @@ import { StatusEnum } from 'src/app/status-enum';
 })
 export class ProductGridComponent implements OnInit {
 
-
-  @Input() products: any;
-  @Output() productsChange = new EventEmitter<any>();
-
-
+  @Input() products: any; //receives from parent view-detail
+  @Output() productsChange = new EventEmitter<any>(); 
+ 
   ngOnInit(): void {
     console.log(this.products);
   }

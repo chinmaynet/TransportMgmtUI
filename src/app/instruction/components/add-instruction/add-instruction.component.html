@@ -99,7 +99,7 @@
                             <dxi-column dataField="ProductDescription" caption="Product Description"
                                 [allowEditing]="false"></dxi-column>
 
-                            <dxi-column dataField="ProductPrice" caption="Product Price"></dxi-column>
+                            <dxi-column [allowEditing]="false" dataField="ProductPrice" caption="Product Price"></dxi-column>
                                 
                             <dxi-column dataField="Quantity" dataType="number" [setCellValue]="setQtyCellValue">
                                 <dxi-validation-rule type="required" message="Qty is required"></dxi-validation-rule>

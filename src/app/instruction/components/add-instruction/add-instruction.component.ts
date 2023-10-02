@@ -23,25 +23,13 @@ export class AddInstructionComponent {
   selectedClientId: number | null = null;
   message: string = 'Cannot add same product again';
   productNames: ProductDropdown[] = [
-    // {
-    //   ProductId: 1,
-    //   ProductName: 'Product A',
-    //   ProductDescription: 'Description for Product A',
-    //   // ProductPrice: 10.99
-    // },
-    // {
-    //   ProductId: 2,
-    //   ProductName: 'Product B',
-    //   ProductDescription: 'Description for Product B',
-    //   // ProductPrice: 19.99
-    // },
-    // {
-    //   ProductId: 3,
-    //   ProductName: 'Product C',
-    //   ProductDescription: 'Description for Product C',
-    //   // ProductPrice: 15.49
-    // }
   ];
+
+  toastVisible: boolean = false;
+  toastType: string = 'success'; 
+  toastMessage: string = '';
+  toastDisplayTime: number = 3000;
+
   selectedProductId!: number;
   selectedProductName: string | null = null;
   selectedProductDescription: string | null = null;
@@ -69,8 +57,8 @@ export class AddInstructionComponent {
     Instruction: this.subInstruction,
     BillingId: 0,
     TotalQuantity: 0,
-    TotalProducts:0,
-    TotalPrice:0,
+    TotalProducts: 0,
+    TotalPrice: 0,
     Status: StatusEnum.Pending,
     ProductCode: 0,
     ProductDescription: '',
@@ -163,13 +151,25 @@ export class AddInstructionComponent {
         next: (response) => {
           this.router.navigate(['/createInstruction']);
           alert('Instruction Added Successfully');
+          this.showToast('success', 'Instruction Added Successfully');
         },
         error: (error) => {
           console.error('Error:', error);
           alert('Error adding instruction. Please check the data and try again.');
+          this.showToast('error', 'Error adding instruction. Please check the data and try again.');
         }
       });
     }
+  }
+  
+
+  showToast(type: string, message: string) {
+    this.toastType = type;
+    this.toastMessage = message;
+    this.toastVisible = true;
+    setTimeout(() => {
+      this.toastVisible = false;
+    }, this.toastDisplayTime);
   }
   clearForm() {
     this.addInstructionRequest = {
@@ -188,14 +188,14 @@ export class AddInstructionComponent {
       },
       BillingId: 0,
       TotalQuantity: 0,
-      TotalProducts:0,
-      TotalPrice:0,
+      TotalProducts: 0,
+      TotalPrice: 0,
       Status: StatusEnum.Pending,
       ProductCode: 0,
       ProductDescription: '',
       // ProductPrice:0,
     };
-    this.selectedClientId = null; 
+    this.selectedClientId = null;
     this.products = [];
   }
 
@@ -206,14 +206,14 @@ export class AddInstructionComponent {
       !!this.addInstructionRequest.Instruction.PickupAddress &&
       !!this.addInstructionRequest.Instruction.DeliveryAddress;
     const atLeastOneProductAdded = this.products.length > 0;
-    if (!instructionFilled || !atLeastOneProductAdded) {      
+    if (!instructionFilled || !atLeastOneProductAdded) {
       this.message = 'Please fill required details to save the intruction';
       this.showError = true;
       return false;
     }
     else
       this.message = 'Instruction added Successfully';
-      return true;
+    return true;
   }
 
   onRowInserted(): boolean {
